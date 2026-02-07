@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetPostsQuery, useDeletePostMutation } from '@/lib/features/api/apiSlice';
+import { useGetPostsQuery, useDeletePostMutation, usePublishPostMutation } from '@/lib/features/api/apiSlice';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 export default function PostList() {
   const { data: posts, isLoading } = useGetPostsQuery(undefined);
   const [deletePost] = useDeletePostMutation();
+  const [publishPost] = usePublishPostMutation();
   const { toast } = useToast();
 
   const handleDelete = async (id: string) => {
@@ -18,6 +19,19 @@ export default function PostList() {
       toast({ title: 'Success', description: 'Post deleted successfully' });
     } catch (error) {
       toast({ title: 'Error', description: 'Failed to delete post', variant: 'destructive' });
+    }
+  };
+
+  const handlePublish = async (id: string) => {
+    try {
+      await publishPost(id).unwrap();
+      toast({ title: 'Success', description: 'Post published to LinkedIn' });
+    } catch (error: any) {
+      toast({ 
+        title: 'Error', 
+        description: error?.data?.message || 'Failed to publish post',
+        variant: 'destructive' 
+      });
     }
   };
 
@@ -50,7 +64,10 @@ export default function PostList() {
                   <TableCell className="max-w-xs truncate">{post.content}</TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-xs ${
-                      post.status === 'scheduled' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                      post.status === 'published' ? 'bg-green-100 text-green-800' :
+                      post.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
+                      post.status === 'failed' ? 'bg-red-100 text-red-800' :
+                      'bg-gray-100 text-gray-800'
                     }`}>
                       {post.status}
                     </span>
@@ -59,13 +76,24 @@ export default function PostList() {
                     {post.scheduledAt ? format(new Date(post.scheduledAt), 'PPp') : '-'}
                   </TableCell>
                   <TableCell>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDelete(post.id)}
-                    >
-                      Delete
-                    </Button>
+                    <div className="flex gap-2">
+                      {(post.status === 'draft' || post.status === 'scheduled') && (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={() => handlePublish(post.id)}
+                        >
+                          Publish Now
+                        </Button>
+                      )}
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDelete(post.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
