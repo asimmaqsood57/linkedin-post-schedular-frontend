@@ -14,7 +14,7 @@ const baseQuery = fetchBaseQuery({
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery,
-  tagTypes: ["Post", "LinkedInAccount"],
+  tagTypes: ["Post", "LinkedInAccount" , 'Schedule'],
   endpoints: (builder) => ({
     register: builder.mutation({
       query: (credentials) => ({
@@ -77,8 +77,48 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Post"],
     }),
+    createSchedule: builder.mutation({
+  query: (data) => ({
+    url: '/schedules',
+    method: 'POST',
+    body: data,
+  }),
+  invalidatesTags: ['Schedule'],
+}),
+getSchedules: builder.query({
+  query: () => '/schedules',
+  providesTags: ['Schedule'],
+}),
+getSchedule: builder.query({
+  query: (id) => `/schedules/${id}`,
+  providesTags: ['Schedule'],
+}),
+updateSchedule: builder.mutation({
+  query: ({ id, data }) => ({
+    url: `/schedules/${id}`,
+    method: 'PUT',
+    body: data,
+  }),
+  invalidatesTags: ['Schedule'],
+}),
+deleteSchedule: builder.mutation({
+  query: (id) => ({
+    url: `/schedules/${id}`,
+    method: 'DELETE',
+  }),
+  invalidatesTags: ['Schedule'],
+}),
+toggleSchedule: builder.mutation({
+  query: (id) => ({
+    url: `/schedules/${id}/toggle`,
+    method: 'PATCH',
+  }),
+  invalidatesTags: ['Schedule'],
+}),
   }),
 });
+
+
 
 export const {
   useRegisterMutation,
@@ -91,4 +131,10 @@ export const {
   useGetLinkedInAccountQuery,
   useDisconnectLinkedInMutation,
   usePublishPostMutation,
+  useCreateScheduleMutation,
+  useGetSchedulesQuery,
+  useGetScheduleQuery,
+  useUpdateScheduleMutation,
+  useDeleteScheduleMutation,
+  useToggleScheduleMutation,
 } = apiSlice;

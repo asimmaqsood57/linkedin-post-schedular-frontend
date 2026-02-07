@@ -1,11 +1,29 @@
-'use client';
+"use client";
 
-import { useGetPostsQuery, useDeletePostMutation, usePublishPostMutation } from '@/lib/features/api/apiSlice';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useToast } from '@/hooks/use-toast';
-import { format } from 'date-fns';
+import {
+  useGetPostsQuery,
+  useDeletePostMutation,
+  usePublishPostMutation,
+} from "@/lib/features/api/apiSlice";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import { format } from "date-fns";
+import { Badge } from "./ui/badge";
 
 export default function PostList() {
   const { data: posts, isLoading } = useGetPostsQuery(undefined);
@@ -16,21 +34,25 @@ export default function PostList() {
   const handleDelete = async (id: string) => {
     try {
       await deletePost(id).unwrap();
-      toast({ title: 'Success', description: 'Post deleted successfully' });
+      toast({ title: "Success", description: "Post deleted successfully" });
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to delete post', variant: 'destructive' });
+      toast({
+        title: "Error",
+        description: "Failed to delete post",
+        variant: "destructive",
+      });
     }
   };
 
   const handlePublish = async (id: string) => {
     try {
       await publishPost(id).unwrap();
-      toast({ title: 'Success', description: 'Post published to LinkedIn' });
+      toast({ title: "Success", description: "Post published to LinkedIn" });
     } catch (error: any) {
-      toast({ 
-        title: 'Error', 
-        description: error?.data?.message || 'Failed to publish post',
-        variant: 'destructive' 
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to publish post",
+        variant: "destructive",
       });
     }
   };
@@ -43,7 +65,9 @@ export default function PostList() {
     <Card>
       <CardHeader>
         <CardTitle>Your Posts</CardTitle>
-        <CardDescription>Manage your generated and scheduled posts</CardDescription>
+        <CardDescription>
+          Manage your generated and scheduled posts
+        </CardDescription>
       </CardHeader>
       <CardContent>
         {posts && posts.length > 0 ? (
@@ -61,23 +85,41 @@ export default function PostList() {
               {posts.map((post: any) => (
                 <TableRow key={post.id}>
                   <TableCell className="font-medium">{post.category}</TableCell>
-                  <TableCell className="max-w-xs truncate">{post.content}</TableCell>
+                  <TableCell className="max-w-xs truncate">
+                    {post.content}
+                  </TableCell>
                   <TableCell>
-                    <span className={`px-2 py-1 rounded-full text-xs ${
-                      post.status === 'published' ? 'bg-green-100 text-green-800' :
-                      post.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
-                      post.status === 'failed' ? 'bg-red-100 text-red-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs ${
+                        post.status === "published"
+                          ? "bg-green-100 text-green-800"
+                          : post.status === "scheduled"
+                            ? "bg-blue-100 text-blue-800"
+                            : post.status === "failed"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
                       {post.status}
                     </span>
                   </TableCell>
                   <TableCell>
-                    {post.scheduledAt ? format(new Date(post.scheduledAt), 'PPp') : '-'}
+                    {post.scheduledAt
+                      ? format(new Date(post.scheduledAt), "PPp")
+                      : "-"}
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {post.category}
+                    {post.schedule && (
+                      <Badge variant="secondary" className="ml-2 text-xs">
+                        Auto: {post.schedule.name}
+                      </Badge>
+                    )}
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      {(post.status === 'draft' || post.status === 'scheduled') && (
+                      {(post.status === "draft" ||
+                        post.status === "scheduled") && (
                         <Button
                           variant="default"
                           size="sm"
@@ -100,7 +142,9 @@ export default function PostList() {
             </TableBody>
           </Table>
         ) : (
-          <p className="text-center text-gray-500 py-8">No posts yet. Generate your first post above!</p>
+          <p className="text-center text-gray-500 py-8">
+            No posts yet. Generate your first post above!
+          </p>
         )}
       </CardContent>
     </Card>
