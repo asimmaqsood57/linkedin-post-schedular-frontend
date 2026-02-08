@@ -35,10 +35,17 @@ export default function PostGenerator() {
     }
 
     try {
+      let scheduledAtUTC;
+      if (scheduledDate) {
+        // Convert local datetime to UTC
+        const localDate = new Date(scheduledDate);
+        scheduledAtUTC = localDate.toISOString();
+      }
+
       await createPost({
         content: generatedContent,
         category,
-        scheduledAt: scheduledDate || undefined,
+        scheduledAt: scheduledAtUTC,
         status: scheduledDate ? 'scheduled' : 'draft',
       }).unwrap();
       
@@ -93,13 +100,16 @@ export default function PostGenerator() {
             </div>
 
             <div>
-              <Label>Schedule Date & Time (Optional)</Label>
+              <Label>Schedule Date & Time (Optional) - Your Local Time</Label>
               <Input
                 type="datetime-local"
                 value={scheduledDate}
                 onChange={(e) => setScheduledDate(e.target.value)}
                 className="mt-2"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Select time in your local timezone. It will be converted automatically.
+              </p>
             </div>
 
             <Button onClick={handleSchedule} disabled={isCreating} className="w-full">
