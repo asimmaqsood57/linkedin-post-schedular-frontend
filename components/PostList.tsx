@@ -6,6 +6,7 @@ import {
   usePublishPostMutation,
 } from "@/lib/features/api/apiSlice";
 import { Button } from "@/components/ui/button";
+import { formatInTimeZone } from "date-fns-tz";
 import {
   Card,
   CardContent,
@@ -105,7 +106,11 @@ export default function PostList() {
                   </TableCell>
                   <TableCell>
                     {post.scheduledAt
-                      ? format(new Date(post.scheduledAt), "PPp")
+                      ? formatInTimeZone(
+                          new Date(post.scheduledAt),
+                          Intl.DateTimeFormat().resolvedOptions().timeZone,
+                          "PPp",
+                        )
                       : "-"}
                   </TableCell>
                   <TableCell className="font-medium">
