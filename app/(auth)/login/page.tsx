@@ -47,6 +47,7 @@ export default function LoginPage() {
               <Input
                 id="email"
                 type="email"
+                className='mt-2'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -58,6 +59,7 @@ export default function LoginPage() {
               <Input
                 id="password"
                 type="password"
+                className='mt-2'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -65,7 +67,7 @@ export default function LoginPage() {
               />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col gap-4">
+          <CardFooter className="flex flex-col gap-4 mt-4">
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>

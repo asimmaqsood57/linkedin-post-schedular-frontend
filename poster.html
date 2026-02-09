@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostAgent LinkedIn Poster</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+            padding: 10px;
+        }
+
+        .poster-container {
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 1200 / 630;
+            position: relative;
+        }
+
+        .poster {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        /* Decorative elements */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .circle1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .circle2 {
+            width: 300px;
+            height: 300px;
+            bottom: -80px;
+            left: -80px;
+        }
+
+        .circle3 {
+            width: 150px;
+            height: 150px;
+            top: 40%;
+            right: 15%;
+            opacity: 0.5;
+        }
+
+        /* Content */
+        .content {
+            position: relative;
+            z-index: 10;
+            padding: clamp(20px, 5vw, 60px) clamp(20px, 6vw, 80px);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 1.2vw, 15px);
+        }
+
+        .logo {
+            width: clamp(40px, 5vw, 60px);
+            height: clamp(40px, 5vw, 60px);
+            background: white;
+            border-radius: clamp(10px, 1.2vw, 15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(20px, 2.5vw, 30px);
+        }
+
+        .brand-name {
+            color: white;
+            font-size: clamp(20px, 3vw, 36px);
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: clamp(15px, 2.5vw, 30px);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: clamp(6px, 1vw, 10px) clamp(12px, 2vw, 24px);
+            border-radius: 50px;
+            color: white;
+            font-size: clamp(12px, 1.3vw, 16px);
+            font-weight: 600;
+            width: fit-content;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .headline {
+            color: white;
+            font-size: clamp(28px, 6vw, 72px);
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+        }
+
+        .subheadline {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: clamp(14px, 2.3vw, 28px);
+            font-weight: 400;
+            line-height: 1.4;
+            max-width: 700px;
+        }
+
+        .features {
+            display: flex;
+            gap: clamp(15px, 2.5vw, 30px);
+            margin-top: clamp(10px, 1.6vw, 20px);
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: clamp(12px, 1.5vw, 18px);
+            font-weight: 600;
+        }
+
+        .feature-icon {
+            width: clamp(18px, 2vw, 24px);
+            height: clamp(18px, 2vw, 24px);
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(10px, 1.2vw, 14px);
+        }
+
+        .cta-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(15px, 3.3vw, 40px);
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: clamp(6px, 1vw, 12px);
+            background: white;
+            color: #667eea;
+            padding: clamp(12px, 1.5vw, 18px) clamp(20px, 3vw, 36px);
+            border-radius: clamp(8px, 1vw, 12px);
+            font-size: clamp(14px, 1.6vw, 20px);
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .arrow {
+            font-size: clamp(16px, 2vw, 24px);
+        }
+
+        .cta-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: clamp(11px, 1.3vw, 16px);
+        }
+
+        .stats {
+            display: flex;
+            gap: clamp(20px, 4vw, 50px);
+            margin-top: clamp(10px, 1.6vw, 20px);
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            color: white;
+        }
+
+        .stat-number {
+            font-size: clamp(24px, 4vw, 48px);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: clamp(11px, 1.3vw, 16px);
+            opacity: 0.9;
+        }
+
+        /* Mockup */
+        .mockup {
+            position: absolute;
+            right: clamp(20px, 5vw, 60px);
+            top: 50%;
+            transform: translateY(-50%);
+            width: clamp(200px, 33vw, 400px);
+        }
+
+        .phone {
+            background: white;
+            border-radius: clamp(15px, 2.5vw, 30px);
+            padding: clamp(8px, 1.2vw, 15px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .screen {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: clamp(10px, 1.6vw, 20px);
+            padding: clamp(10px, 1.6vw, 20px);
+            height: clamp(250px, 41vw, 500px);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(8px, 1.2vw, 15px);
+        }
+
+        .post-card {
+            background: white;
+            border-radius: clamp(6px, 1vw, 12px);
+            padding: clamp(8px, 1.2vw, 15px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: clamp(5px, 0.8vw, 10px);
+            margin-bottom: clamp(5px, 0.8vw, 10px);
+        }
+
+        .avatar {
+            width: clamp(20px, 3.3vw, 40px);
+            height: clamp(20px, 3.3vw, 40px);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+        }
+
+        .post-author {
+            font-size: clamp(10px, 1.2vw, 14px);
+            font-weight: 700;
+            color: #333;
+        }
+
+        .post-time {
+            font-size: clamp(8px, 1vw, 12px);
+            color: #666;
+        }
+
+        .post-content {
+            font-size: clamp(9px, 1.1vw, 13px);
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .tags {
+            display: flex;
+            gap: clamp(3px, 0.4vw, 5px);
+            margin-top: clamp(4px, 0.6vw, 8px);
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #e8f0fe;
+            color: #1967d2;
+            padding: clamp(2px, 0.2vw, 3px) clamp(4px, 0.6vw, 8px);
+            border-radius: clamp(2px, 0.3vw, 4px);
+            font-size: clamp(8px, 0.9vw, 11px);
+            font-weight: 600;
+        }
+
+        .auto-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(3px, 0.4vw, 5px);
+            margin-top: clamp(5px, 0.8vw, 10px);
+            padding: clamp(4px, 0.6vw, 8px);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: clamp(4px, 0.6vw, 8px);
+            color: white;
+            font-size: clamp(8px, 0.9vw, 11px);
+            font-weight: 600;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .mockup {
+                display: none;
+            }
+
+            .headline {
+                font-size: clamp(32px, 8vw, 48px);
+            }
+
+            .subheadline {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .circle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="poster-container">
+        <div class="poster">
+        <!-- Decorative circles -->
+        <div class="circle circle1"></div>
+        <div class="circle circle2"></div>
+        <div class="circle circle3"></div>
+
+        <div class="content">
+            <!-- Logo -->
+            <div class="logo-section">
+                <div class="logo">✨</div>
+                <div class="brand-name">PostAgent</div>
+            </div>
+
+            <!-- Main content -->
+            <div class="main-content">
+                <div class="badge">
+                    🤖 AI-Powered LinkedIn Automation
+                </div>
+
+                <h1 class="headline">
+                    Stop Writing.<br>
+                    Start Growing.
+                </h1>
+
+                <p class="subheadline">
+                    PostAgent generates and schedules professional LinkedIn posts automatically. Grow your presence on autopilot.
+                </p>
+
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number">10k+</div>
+                        <div class="stat-label">Posts Generated</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">3x</div>
+                        <div class="stat-label">More Engagement</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Time Saved</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="cta-section">
+                <a href="#" class="cta-button">
+                    Start Free Trial
+                    <span class="arrow">→</span>
+                </a>
+                <div class="cta-text">
+                    ✓ 14-day free trial<br>
+                    ✓ No credit card required
+                </div>
+            </div>
+        </div>
+
+        <!-- Mockup -->
+        <div class="mockup">
+            <div class="phone">
+                <div class="screen">
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="avatar"></div>
+                            <div>
+                                <div class="post-author">Your Name</div>
+                                <div class="post-time">Just now</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            Excited to share insights on AI automation in business. The future is here! 🚀
+                        </div>
+                        <div class="tags">
+                            <span class="tag">#AI</span>
+                            <span class="tag">#Tech</span>
+                            <span class="tag">#Growth</span>
+                        </div>
+                        <div class="auto-badge">
+                            ✨ Generated & Posted Automatically
+                        </div>
+                    </div>
+
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="avatar"></div>
+                            <div>
+                                <div class="post-author">Your Name</div>
+                                <div class="post-time">2 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            5 key trends shaping the future of digital marketing...
+                        </div>
+                        <div class="tags">
+                            <span class="tag">#Marketing</span>
+                            <span class="tag">#Business</span>
+                        </div>
+                    </div>
+
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="avatar"></div>
+                            <div>
+                                <div class="post-author">Your Name</div>
+                                <div class="post-time">Yesterday</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            Career advice: How to stand out in competitive markets...
+                        </div>
+                        <div class="tags">
+                            <span class="tag">#Career</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

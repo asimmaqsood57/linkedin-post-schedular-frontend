@@ -71,6 +71,7 @@ export default function ScheduleCreator() {
             <Label>Schedule Name</Label>
             <Input
               value={name}
+              className='mt-2'
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g., Daily Tech Updates"
               required
@@ -81,6 +82,7 @@ export default function ScheduleCreator() {
             <Label>Description/Topic (Optional)</Label>
             <Textarea
               value={description}
+              className='mt-2'
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g., AI innovations, startup tips, industry trends..."
               rows={3}
@@ -92,6 +94,8 @@ export default function ScheduleCreator() {
 
           <div>
             <Label>Posting Frequency</Label>
+            <div className='mt-2'>
+
             <Select value={frequency} onValueChange={setFrequency}>
               <SelectTrigger>
                 <SelectValue />
@@ -103,6 +107,8 @@ export default function ScheduleCreator() {
                 <SelectItem value="custom">Custom</SelectItem>
               </SelectContent>
             </Select>
+            </div>
+
           </div>
 
           {frequency === 'custom' && (

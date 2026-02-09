@@ -70,7 +70,8 @@ export default function PostGenerator() {
       <CardContent className="space-y-4">
         <div>
           <Label>Category</Label>
-          <Select value={category} onValueChange={setCategory}>
+          <div className='mt-2'>
+          <Select value={category}  onValueChange={setCategory}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -81,6 +82,8 @@ export default function PostGenerator() {
               <SelectItem value="Marketing">Marketing</SelectItem>
             </SelectContent>
           </Select>
+          </div>
+
         </div>
 
         <Button onClick={handleGenerate} disabled={isGenerating} className="w-full">

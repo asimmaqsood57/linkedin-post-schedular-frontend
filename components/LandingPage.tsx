@@ -53,7 +53,7 @@ export default function LandingPage() {
               href="/register" 
               className="group bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transition-all flex items-center gap-2"
             >
-              Start Free Trial
+              Start Free 
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold text-lg hover:border-gray-400 transition-colors">
@@ -61,7 +61,7 @@ export default function LandingPage() {
             </button>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-600">
+          {/* <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <Check className="w-5 h-5 text-green-500" />
               No credit card required
@@ -74,7 +74,7 @@ export default function LandingPage() {
               <Check className="w-5 h-5 text-green-500" />
               Cancel anytime
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
 
