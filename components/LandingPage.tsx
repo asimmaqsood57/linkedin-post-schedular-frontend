@@ -56,9 +56,12 @@ export default function LandingPage() {
               Start Free 
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold text-lg hover:border-gray-400 transition-colors">
+            <a href='/demo.mp4' download>
+
+            <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold text-lg hover:border-gray-400 transition-colors" >
               Watch Demo
             </button>
+            </a>
           </div>
 
           {/* <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-600">
@@ -499,3 +502,4 @@ export default function LandingPage() {
     </div>
   );
 }
+
