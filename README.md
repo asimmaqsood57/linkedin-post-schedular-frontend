@@ -2008,3 +2008,10 @@ Your Name
 ---
 
 **This README provides complete context for any LLM to understand the entire project structure, architecture, and implementation details.**
+
+
+
+
+Test user
+email: admin@admin.com
+password: admin1234

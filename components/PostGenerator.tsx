@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -12,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function PostGenerator() {
   const [category, setCategory] = useState('Technology');
+  const [instructions, setInstructions] = useState('');
   const [generatedContent, setGeneratedContent] = useState('');
   const [scheduledDate, setScheduledDate] = useState('');
   const [generatePost, { isLoading: isGenerating }] = useGeneratePostMutation();
@@ -20,7 +22,7 @@ export default function PostGenerator() {
 
   const handleGenerate = async () => {
     try {
-      const result = await generatePost({ category }).unwrap();
+      const result = await generatePost({ category, instructions: instructions.trim() || undefined }).unwrap();
       setGeneratedContent(result.content);
       toast({ title: 'Success', description: 'Post generated successfully' });
     } catch (error) {
@@ -37,7 +39,6 @@ export default function PostGenerator() {
     try {
       let scheduledAtUTC;
       if (scheduledDate) {
-        // Convert local datetime to UTC
         const localDate = new Date(scheduledDate);
         scheduledAtUTC = localDate.toISOString();
       }
@@ -48,14 +49,15 @@ export default function PostGenerator() {
         scheduledAt: scheduledAtUTC,
         status: scheduledDate ? 'scheduled' : 'draft',
       }).unwrap();
-      
-      toast({ 
-        title: 'Success', 
-        description: scheduledDate ? 'Post scheduled successfully' : 'Post saved as draft' 
+
+      toast({
+        title: 'Success',
+        description: scheduledDate ? 'Post scheduled successfully' : 'Post saved as draft',
       });
-      
+
       setGeneratedContent('');
       setScheduledDate('');
+      setInstructions('');
     } catch (error) {
       toast({ title: 'Error', description: 'Failed to save post', variant: 'destructive' });
     }
@@ -70,20 +72,33 @@ export default function PostGenerator() {
       <CardContent className="space-y-4">
         <div>
           <Label>Category</Label>
-          <div className='mt-2'>
-          <Select value={category}  onValueChange={setCategory}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Technology">Technology</SelectItem>
-              <SelectItem value="Business">Business</SelectItem>
-              <SelectItem value="Career">Career</SelectItem>
-              <SelectItem value="Marketing">Marketing</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="mt-2">
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Technology">Technology</SelectItem>
+                <SelectItem value="Business">Business</SelectItem>
+                <SelectItem value="Career">Career</SelectItem>
+                <SelectItem value="Marketing">Marketing</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+        </div>
 
+        <div>
+          <Label>Instructions (Optional)</Label>
+          <Textarea
+            value={instructions}
+            onChange={(e) => setInstructions(e.target.value)}
+            placeholder="e.g. Write about the impact of AI on software jobs, use a motivational tone, include a call to action..."
+            rows={3}
+            className="mt-2"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Describe what you want the post to be about. The more specific, the better.
+          </p>
         </div>
 
         <Button onClick={handleGenerate} disabled={isGenerating} className="w-full">
