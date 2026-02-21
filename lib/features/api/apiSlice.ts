@@ -4,9 +4,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_URL,
   prepareHeaders: (headers) => {
     const token = localStorage.getItem("token");
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
-    }
+    if (token) headers.set("Authorization", `Bearer ${token}`);
     return headers;
   },
 });
@@ -14,35 +12,19 @@ const baseQuery = fetchBaseQuery({
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery,
-  tagTypes: ["Post", "LinkedInAccount", "Schedule"],
+  tagTypes: ["Post", "LinkedInAccount", "Schedule", "UserProfile", "SavedJob"],
   endpoints: (builder) => ({
     register: builder.mutation({
-      query: (credentials) => ({
-        url: "/auth/register",
-        method: "POST",
-        body: credentials,
-      }),
+      query: (credentials) => ({ url: "/auth/register", method: "POST", body: credentials }),
     }),
     login: builder.mutation({
-      query: (credentials) => ({
-        url: "/auth/login",
-        method: "POST",
-        body: credentials,
-      }),
+      query: (credentials) => ({ url: "/auth/login", method: "POST", body: credentials }),
     }),
     generatePost: builder.mutation({
-      query: (data) => ({
-        url: "/posts/generate",
-        method: "POST",
-        body: data,
-      }),
+      query: (data) => ({ url: "/posts/generate", method: "POST", body: data }),
     }),
     createPost: builder.mutation({
-      query: (data) => ({
-        url: "/posts",
-        method: "POST",
-        body: data,
-      }),
+      query: (data) => ({ url: "/posts", method: "POST", body: data }),
       invalidatesTags: ["Post"],
     }),
     getPosts: builder.query({
@@ -54,21 +36,11 @@ export const apiSlice = createApi({
       providesTags: (_result, _error, id) => [{ type: "Post", id }],
     }),
     updatePost: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `/posts/${id}`,
-        method: "PATCH",
-        body: data,
-      }),
-      invalidatesTags: (_result, _error, { id }) => [
-        { type: "Post", id },
-        "Post",
-      ],
+      query: ({ id, data }) => ({ url: `/posts/${id}`, method: "PATCH", body: data }),
+      invalidatesTags: (_result, _error, { id }) => [{ type: "Post", id }, "Post"],
     }),
     deletePost: builder.mutation({
-      query: (id) => ({
-        url: `/posts/${id}`,
-        method: "DELETE",
-      }),
+      query: (id) => ({ url: `/posts/${id}`, method: "DELETE" }),
       invalidatesTags: ["Post"],
     }),
     getLinkedInAuthUrl: builder.query({
@@ -79,25 +51,15 @@ export const apiSlice = createApi({
       providesTags: ["LinkedInAccount"],
     }),
     disconnectLinkedIn: builder.mutation({
-      query: () => ({
-        url: "/linkedin/disconnect",
-        method: "DELETE",
-      }),
+      query: () => ({ url: "/linkedin/disconnect", method: "DELETE" }),
       invalidatesTags: ["LinkedInAccount"],
     }),
     publishPost: builder.mutation({
-      query: (postId) => ({
-        url: `/linkedin/publish/${postId}`,
-        method: "POST",
-      }),
+      query: (postId) => ({ url: `/linkedin/publish/${postId}`, method: "POST" }),
       invalidatesTags: ["Post"],
     }),
     createSchedule: builder.mutation({
-      query: (data) => ({
-        url: "/schedules",
-        method: "POST",
-        body: data,
-      }),
+      query: (data) => ({ url: "/schedules", method: "POST", body: data }),
       invalidatesTags: ["Schedule"],
     }),
     getSchedules: builder.query({
@@ -109,26 +71,57 @@ export const apiSlice = createApi({
       providesTags: ["Schedule"],
     }),
     updateSchedule: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `/schedules/${id}`,
-        method: "PUT",
-        body: data,
-      }),
+      query: ({ id, data }) => ({ url: `/schedules/${id}`, method: "PUT", body: data }),
       invalidatesTags: ["Schedule"],
     }),
     deleteSchedule: builder.mutation({
-      query: (id) => ({
-        url: `/schedules/${id}`,
-        method: "DELETE",
-      }),
+      query: (id) => ({ url: `/schedules/${id}`, method: "DELETE" }),
       invalidatesTags: ["Schedule"],
     }),
     toggleSchedule: builder.mutation({
-      query: (id) => ({
-        url: `/schedules/${id}/toggle`,
-        method: "PATCH",
-      }),
+      query: (id) => ({ url: `/schedules/${id}/toggle`, method: "PATCH" }),
       invalidatesTags: ["Schedule"],
+    }),
+
+    // ── Jobs ──────────────────────────────────────────────────
+    uploadCv: builder.mutation({
+      query: (formData) => ({ url: "/jobs/cv/upload", method: "POST", body: formData }),
+      invalidatesTags: ["UserProfile"],
+    }),
+    deleteCv: builder.mutation({
+      query: () => ({ url: "/jobs/cv", method: "DELETE" }),
+      invalidatesTags: ["UserProfile"],
+    }),
+    updateCvText: builder.mutation({
+      query: (data) => ({ url: "/jobs/cv/text", method: "PATCH", body: data }),
+      invalidatesTags: ["UserProfile"],
+    }),
+    getJobProfile: builder.query({
+      query: () => "/jobs/profile",
+      providesTags: ["UserProfile"],
+    }),
+    analyzeProfile: builder.mutation({
+      query: (data) => ({ url: "/jobs/profile/analyze", method: "POST", body: data }),
+      invalidatesTags: ["UserProfile"],
+    }),
+    searchJobs: builder.query({
+      query: (keywords = "") =>
+        `/jobs/search${keywords ? `?keywords=${encodeURIComponent(keywords)}` : ""}`,
+    }),
+    generateApplicationEmail: builder.mutation({
+      query: (data) => ({ url: "/jobs/email", method: "POST", body: data }),
+    }),
+    saveJob: builder.mutation({
+      query: (data) => ({ url: "/jobs/saved", method: "POST", body: data }),
+      invalidatesTags: ["SavedJob"],
+    }),
+    getSavedJobs: builder.query({
+      query: () => "/jobs/saved",
+      providesTags: ["SavedJob"],
+    }),
+    removeSavedJob: builder.mutation({
+      query: (externalId) => ({ url: `/jobs/saved/${externalId}`, method: "DELETE" }),
+      invalidatesTags: ["SavedJob"],
     }),
   }),
 });
@@ -152,4 +145,14 @@ export const {
   useUpdateScheduleMutation,
   useDeleteScheduleMutation,
   useToggleScheduleMutation,
+  useUploadCvMutation,
+  useDeleteCvMutation,
+  useUpdateCvTextMutation,
+  useGetJobProfileQuery,
+  useAnalyzeProfileMutation,
+  useSearchJobsQuery,
+  useGenerateApplicationEmailMutation,
+  useSaveJobMutation,
+  useGetSavedJobsQuery,
+  useRemoveSavedJobMutation,
 } = apiSlice;
